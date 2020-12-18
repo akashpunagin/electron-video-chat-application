@@ -111,5 +111,13 @@ function copyToClipboard() {
 
 // Leave meeting
 leaveMeetingButton.on('click', function () {
-  window.location.href = "/";
+  leaveMeeting();
 });
+const { ipcRenderer } = require('electron');
+ipcRenderer.on('exit-meeting', () => {
+  leaveMeeting();
+});
+
+const leaveMeeting = function () {
+  window.location.href = "/";
+}

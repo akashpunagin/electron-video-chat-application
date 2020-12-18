@@ -3,11 +3,13 @@ require('./server/server');
 
 function createWindow () {
   const win = new BrowserWindow({
-    width: 800,
-    height: 600,
+    width: 1500,
+    height: 900,
+    minWidth: 1500,
+    minHeight: 900,
     webPreferences: {
-      // nodeIntegration: true,
-      preload: `${__dirname}/renderer.js`,
+      nodeIntegration: true,
+      preload: `${__dirname}/public/js/renderer.js`,
     }
   });
 
@@ -30,9 +32,19 @@ function createMainMenu(win) {
           label: "Exit Meeting",
           accelerator: "CommandOrControl+E",
           click() {
-            console.log("EXIT MEETING");
             // BrowserWindow.getFocusedWindow().webContents.send('exit-meeting'); // TODO: delete line
             win.webContents.send('exit-meeting');
+          }
+        }
+      ]
+    },
+    {
+      label: "View",
+      submenu: [
+        {
+          label: "Toggle Chat",
+          click() {
+            console.log("CHAT TOOGLE");
           }
         }
       ]
@@ -43,8 +55,7 @@ function createMainMenu(win) {
 }
 
 app.whenReady().then(() => {
-  const win = createWindow();
-  createMainMenu(win);
+  createMainMenu(createWindow());
 });
 
 app.on('window-all-closed', () => {
