@@ -13,18 +13,27 @@ function createWindow () {
     }
   });
 
-  // win.loadFile('public/index.html');
   win.loadURL('http://localhost:3000/');
-  // win.loadURL("https://node-video-chat-application.herokuapp.com/");
-  // win.once('ready-to-show', () => {
-  //   win.show()
-  // });
-  win.webContents.openDevTools();
+  win.removeMenu();
+  win.webContents.openDevTools(); // TODO: remove for production
   return win;
 }
 
 function createMainMenu(win) {
   const template = [
+    {
+      label: "Tools",
+      submenu: [
+        {
+          label: "Refresh",
+          accelerator: "CommandOrControl+R",
+          click() {
+            // win.reload();
+            win.webContents.send('refresh-page');
+          }
+        }
+      ]
+    },
     {
       label: "Meeting",
       submenu: [
@@ -32,7 +41,6 @@ function createMainMenu(win) {
           label: "Exit Meeting",
           accelerator: "CommandOrControl+E",
           click() {
-            // BrowserWindow.getFocusedWindow().webContents.send('exit-meeting'); // TODO: delete line
             win.webContents.send('exit-meeting');
           }
         }
@@ -44,14 +52,23 @@ function createMainMenu(win) {
         {
           label: "Toggle Chat",
           click() {
-            console.log("CHAT TOOGLE");
+            win.webContents.send('chat-toggle');
           }
         }
       ]
     }
   ];
   const menu = Menu.buildFromTemplate(template);
-  Menu.setApplicationMenu(menu);
+
+  ipcMain.on('logged-in', (event) => {
+    Menu.setApplicationMenu(menu);
+    event.returnValue;
+  });
+
+  ipcMain.on('logged-out', (event) => {
+    win.removeMenu();
+    event.returnValue;
+  });
 }
 
 app.whenReady().then(() => {

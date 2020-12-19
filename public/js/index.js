@@ -1,3 +1,5 @@
+const { ipcRenderer } = require('electron');
+
 var submitButton = $('button[type="submit"]');
 var roomIdInput = $('#roomId');
 var radioButtons = $('input[type="radio"]');
@@ -12,5 +14,9 @@ $(document).ready(function() {
       submitButton.text("Create Room");
       roomIdInput.prop('readonly', true).val(ROOM_ID);
     }
+  });
+
+  $(".form-signin").submit(function(){
+    ipcRenderer.send('logged-in');
   });
 });

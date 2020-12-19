@@ -1,3 +1,5 @@
+const { ipcRenderer } = require('electron');
+
 var muteButton = $('#main__mute__button');
 var videoButton = $('#main_video__button');
 var chatButton = $('#main__chat__button');
@@ -41,19 +43,27 @@ const playStopVideo = function () {
   }
 }
 
+const toggleChatDisplay = function () {
+  if (mainChatWindow.is(":visible")) {
+    mainChatWindow.removeClass('d-flex').addClass('d-none');
+    mainVideoWindow.removeClass(mainChatWindowCols_Shrinked).addClass(mainChatWindowCols_Expanded);
+    setChatShowButton();
+  } else {
+    mainChatWindow.removeClass('d-none').addClass('d-flex');
+    mainVideoWindow.removeClass(mainChatWindowCols_Expanded).addClass(mainChatWindowCols_Shrinked);
+    setChatHideButton();
+  }
+}
+
 $(document).ready(function () {
   chatButton.on('click', function () {
-    if (mainChatWindow.is(":visible")) {
-      mainChatWindow.removeClass('d-flex').addClass('d-none');
-      mainVideoWindow.removeClass(mainChatWindowCols_Shrinked).addClass(mainChatWindowCols_Expanded);
-      setChatShowButton();
-    } else {
-      mainChatWindow.removeClass('d-none').addClass('d-flex');
-      mainVideoWindow.removeClass(mainChatWindowCols_Expanded).addClass(mainChatWindowCols_Shrinked);
-      setChatHideButton();
-    }
+    toggleChatDisplay();
   });
 });
+
+ipcRenderer.on('chat-toggle', () => {
+  toggleChatDisplay();
+})
 
 const setChatShowButton = function () {
   chatButton.find("i").removeClass("fa-comment-slash").removeClass("controls__disabled").addClass('fa-comment');
@@ -95,6 +105,7 @@ roomTooltip.hover(function () {
     roomTooltip.find('i').removeClass('fa-door-open').addClass('fa-door-closed');
   }
 });
+
 function copyToClipboard() {
   roomTooltip.tooltip('enable');
   var $temp = $("<input>");
@@ -113,11 +124,11 @@ function copyToClipboard() {
 leaveMeetingButton.on('click', function () {
   leaveMeeting();
 });
-const { ipcRenderer } = require('electron');
 ipcRenderer.on('exit-meeting', () => {
   leaveMeeting();
 });
 
 const leaveMeeting = function () {
   window.location.href = "/";
+  ipcRenderer.send('logged-out');
 }

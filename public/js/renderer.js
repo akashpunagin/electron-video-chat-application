@@ -1,5 +1,5 @@
-// const { ipcRenderer } = require('electron');
-//
-// ipcRenderer.on('exit-meeting', () => {
-//   window.location.href = "/";
-// });
+const { ipcRenderer } = require('electron');
+
+ipcRenderer.on('refresh-page', () => {
+  location.reload();
+});
