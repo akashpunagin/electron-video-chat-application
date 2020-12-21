@@ -7,10 +7,11 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "electron-forge start",
     "package": "electron-forge package",
-    "make": "electron-forge make"
+    "make": "electron-forge make",
+    "make-windows": "electron-forge make --platform win32"
   },
   "keywords": [],
-  "author": "",
+  "author": "AkashPunagin",
   "license": "ISC",
   "dependencies": {
     "ejs": "^3.1.5",

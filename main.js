@@ -1,5 +1,4 @@
 const { app, BrowserWindow, Menu, ipcMain } = require('electron');
-require('./server/server');
 
 function createWindow () {
   const win = new BrowserWindow({
@@ -9,11 +8,12 @@ function createWindow () {
     minHeight: 900,
     webPreferences: {
       nodeIntegration: true,
-      preload: `${__dirname}/public/js/renderer.js`,
+      preload: `./renderer.js`,
     }
   });
 
-  win.loadURL('http://localhost:3000/');
+  // win.loadURL('http://localhost:3000/');
+  win.loadURL('https://node-video-chat-application.herokuapp.com/');
   win.removeMenu();
   win.webContents.openDevTools(); // TODO: remove for production
   return win;
